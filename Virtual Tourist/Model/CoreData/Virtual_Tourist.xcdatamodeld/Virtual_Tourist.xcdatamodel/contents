@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21C52" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="VTLocationPin" representedClassName="VTLocationPin" syncable="YES" codeGenerationType="class">
+        <attribute name="lat" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="long" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="pictures" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="VTPictures" inverseName="locationPin" inverseEntity="VTPictures"/>
+    </entity>
+    <entity name="VTPictures" representedClassName="VTPictures" syncable="YES" codeGenerationType="class">
+        <attribute name="url" optional="YES" attributeType="URI"/>
+        <relationship name="locationPin" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VTLocationPin" inverseName="pictures" inverseEntity="VTLocationPin"/>
+    </entity>
+    <elements>
+        <element name="VTLocationPin" positionX="-323.7734375" positionY="-1.65234375" width="128" height="88"/>
+        <element name="VTPictures" positionX="-57.73828125" positionY="-18.23828125" width="128" height="73"/>
+    </elements>
+</model>
