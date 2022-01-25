@@ -10,12 +10,11 @@ import MapKit
 import CoreLocation
 import CoreData
 
-// TODO: Delete Annotations AND Fix Search bar
 // TODO: Save current map location & Resolution
 
 class TravelLocationsMapViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
-    @IBOutlet weak var locationSearchTextField: UITextField!
+
     var dataController: DataController!
     var pin: VTLocationPin!
     var fetchResultsController: NSFetchedResultsController<VTLocationPin>!
@@ -24,6 +23,12 @@ class TravelLocationsMapViewController: UIViewController {
         manager.desiredAccuracy = kCLLocationAccuracyKilometer
         return manager
     }()
+    
+    @IBAction func searchButtonTapped(_ sender: UIBarButtonItem) {
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchBar.delegate = self
+        present(searchController, animated: true, completion: nil)
+    }
     
     fileprivate func setUpFetchResultsController() {
         let fetchRequst: NSFetchRequest<VTLocationPin> = VTLocationPin.fetchRequest()
@@ -180,6 +185,49 @@ extension TravelLocationsMapViewController: NSFetchedResultsControllerDelegate {
             break
         default:
             break
+        }
+    }
+}
+
+// MARK: - UISearchBarDelegate Methods
+extension TravelLocationsMapViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        UIApplication.shared.beginIgnoringInteractionEvents()
+        let activityIndicator = UIActivityIndicatorView()
+        activityIndicator.style = .gray
+        activityIndicator.center = self.view.center
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.startAnimating()
+        
+        self.view.addSubview(activityIndicator)
+        
+        // hide searchBar
+        searchBar.resignFirstResponder()
+        dismiss(animated: true, completion: nil)
+        
+        // create search request
+        let searchRequest = MKLocalSearch.Request()
+        searchRequest.naturalLanguageQuery = searchBar.text
+        let activeSearch = MKLocalSearch(request: searchRequest)
+        activeSearch.start { response, err in
+            activityIndicator.stopAnimating()
+            UIApplication.shared.endIgnoringInteractionEvents()
+            guard let response = response else {
+                print("Something went wrong searching the location: \(err?.localizedDescription)")
+                return
+            }
+            
+            // Get data
+            let lat = response.boundingRegion.center.latitude
+            let long = response.boundingRegion.center.longitude
+            
+            self.addPin(long: long, lat: lat)
+            
+            // Zoom-in on new pin
+            let coordinate: CLLocationCoordinate2D = CLLocationCoordinate2DMake(lat, long)
+            let span = MKCoordinateSpan(latitudeDelta: 0.3, longitudeDelta: 0.3)
+            let region = MKCoordinateRegion(center: coordinate, span: span)
+            self.mapView.setRegion(region, animated: true)
         }
     }
 }

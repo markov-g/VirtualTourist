@@ -22,7 +22,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let _ = (scene as? UIWindowScene) else { return }
         dataController.load()
         // inject data controller into notebooksListController
-        if let travelLocationsMapVC = window?.rootViewController as? TravelLocationsMapViewController {
+        if let navigationController = window?.rootViewController as? UINavigationController {
+            let travelLocationsMapVC = navigationController.topViewController as! TravelLocationsMapViewController
             travelLocationsMapVC.dataController = dataController
         }
     }
