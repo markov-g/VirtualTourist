@@ -10,20 +10,34 @@ import MapKit
 import CoreLocation
 import CoreData
 
-// TODO: Use fatch results contoller and core data notifications to auto update annotations when new pins are added
+// TODO: Delete Annotations AND Fix Search bar
+// TODO: Save current map location & Resolution
 
 class TravelLocationsMapViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var locationSearchTextField: UITextField!
     var dataController: DataController!
     var pin: VTLocationPin!
-    var savedPins: [VTLocationPin]!
     var fetchResultsController: NSFetchedResultsController<VTLocationPin>!
     lazy var locationManager: CLLocationManager = {
         var manager = CLLocationManager()
         manager.desiredAccuracy = kCLLocationAccuracyKilometer
         return manager
     }()
+    
+    fileprivate func setUpFetchResultsController() {
+        let fetchRequst: NSFetchRequest<VTLocationPin> = VTLocationPin.fetchRequest()
+        // sort by longitude, since NSFetchResultsController requires consistent ordering
+        let sortDescriptor = NSSortDescriptor(key: "long", ascending: false)
+        fetchRequst.sortDescriptors = [sortDescriptor]
+        fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequst, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        fetchResultsController.delegate = self
+        do {
+            try fetchResultsController.performFetch()
+        } catch {
+            fatalError("The fetch could not be performed: \(error.localizedDescription)")
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,7 +48,14 @@ class TravelLocationsMapViewController: UIViewController {
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(onLongPress))
         mapView.addGestureRecognizer(longPressGestureRecognizer)
         
-        loadSavedLocations()
+        setUpFetchResultsController()
+
+        _ = loadSavedLocations()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        fetchResultsController = nil
     }
     
     @objc private func onLongPress(_ sender: UILongPressGestureRecognizer) {
@@ -50,26 +71,44 @@ class TravelLocationsMapViewController: UIViewController {
         pin.long = long
         pin.lat = lat
         try? dataController.viewContext.save()
-        redrawPin(pin)
+//        redrawPin(pin)
+    }
+    
+    func removePin(forAnnotation pin: MKAnnotation) {
+        let contains = NSPredicate(format: "lat == %lf AND long == %lf", pin.coordinate.latitude, pin.coordinate.longitude)
+        
+        if let pins = self.loadSavedLocations(redraw: false) {
+            let toRemove = pins.filter { location in
+                contains.evaluate(with: location)
+            }
+            debugPrint("Removing location @ \(toRemove.first)")
+            dataController.viewContext.delete(toRemove.first!)
+            try? dataController.viewContext.save()
+            loadSavedLocations()
+        }
     }
     
     fileprivate func redrawPin(_ pin: VTLocationPin) {
         let pinAnnotation = MKPointAnnotation()
         pinAnnotation.coordinate = CLLocationCoordinate2DMake(pin.lat, pin.long)
-        pinAnnotation.title = "Virtual Tourist POI @ (lat: \(pin.lat), long: \(pin.long)"
+        pinAnnotation.title = "POI@(lat:\(pin.lat),long:\(pin.long)"
         mapView.addAnnotation(pinAnnotation)
     }
     
-    fileprivate func loadSavedLocations() {
-        // TODO:
+    fileprivate func loadSavedLocations(redraw: Bool = true) -> [VTLocationPin]? {
         let fetchRequst: NSFetchRequest<VTLocationPin> = VTLocationPin.fetchRequest()
         if let pins = try? dataController.viewContext.fetch(fetchRequst) {
-            self.savedPins = pins
-            debugPrint("pulled \(self.savedPins.count) pins from CoreData store.")
-            for pin in pins {
-                redrawPin(pin)
+            debugPrint("pulled \(pins.count) pins from CoreData store.")
+            if redraw {
+                for pin in pins {
+                    redrawPin(pin)
+                }
             }
+            
+            return pins
         }
+        
+        return nil
     }
 }
 
@@ -86,7 +125,8 @@ extension TravelLocationsMapViewController: MKMapViewDelegate {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
             pinView!.canShowCallout = true
             pinView!.pinTintColor = .green
-            pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+            pinView!.rightCalloutAccessoryView = UIButton(type: .infoDark)
+            pinView?.leftCalloutAccessoryView = UIButton(type: .close)
         }
         else {
             pinView!.annotation = annotation
@@ -101,6 +141,12 @@ extension TravelLocationsMapViewController: MKMapViewDelegate {
         if control == view.rightCalloutAccessoryView {
             let app = UIApplication.shared
             presentPhotoAlbumVC()            
+        }
+        
+        if control == view.leftCalloutAccessoryView {
+            debugPrint("delete annotation")
+            self.removePin(forAnnotation: view.annotation as! MKAnnotation)
+            mapView.removeAnnotation(view.annotation as! MKAnnotation)
         }
     }
     
@@ -118,6 +164,22 @@ extension TravelLocationsMapViewController: CLLocationManagerDelegate {
 
         if status == .authorizedWhenInUse || status == .authorizedAlways {
             locationManager.startUpdatingLocation()
+        }
+    }
+}
+
+// MARK: - NSFetchedResultsControllerDelegate Methods
+extension TravelLocationsMapViewController: NSFetchedResultsControllerDelegate {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        let newPin = anObject as! VTLocationPin
+        switch type {
+        case .insert:
+            debugPrint("New pin inserted: \(newPin.lat), \(newPin.long)")
+            redrawPin(newPin)
+        case .delete:
+            break
+        default:
+            break
         }
     }
 }
