@@ -6,11 +6,12 @@
         <relationship name="pictures" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="VTPictures" inverseName="locationPin" inverseEntity="VTPictures"/>
     </entity>
     <entity name="VTPictures" representedClassName="VTPictures" syncable="YES" codeGenerationType="class">
+        <attribute name="image" optional="YES" attributeType="Binary"/>
         <attribute name="url" optional="YES" attributeType="URI"/>
         <relationship name="locationPin" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VTLocationPin" inverseName="pictures" inverseEntity="VTLocationPin"/>
     </entity>
     <elements>
         <element name="VTLocationPin" positionX="-323.7734375" positionY="-1.65234375" width="128" height="88"/>
-        <element name="VTPictures" positionX="-57.73828125" positionY="-18.23828125" width="128" height="73"/>
+        <element name="VTPictures" positionX="-57.73828125" positionY="-18.23828125" width="128" height="74"/>
     </elements>
 </model>

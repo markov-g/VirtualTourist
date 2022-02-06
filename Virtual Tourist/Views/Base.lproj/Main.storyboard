@@ -81,19 +81,45 @@
                                 <rect key="frame" x="0.0" y="333" width="414" height="499.5"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="3Eh-pl-OaH">
-                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="itemSize" width="155" height="149"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="me.gmarkov.CollectionCell" id="rIb-cv-y1d">
-                                        <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="me.gmarkov.CollectionCell" id="rIb-cv-y1d" customClass="PhotoAlbumCollectionViewCell" customModule="Virtual_Tourist" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="155" height="149"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="gPA-s6-u7t">
-                                            <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="155" height="149"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uua-DP-Y9O">
+                                                    <rect key="frame" x="56.5" y="8" width="42" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="JFP-LD-dHc">
+                                                    <rect key="frame" x="17.5" y="37" width="120" height="100"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="120" id="11e-KK-Pqj"/>
+                                                        <constraint firstAttribute="height" constant="100" id="Bt1-ZJ-ihh"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="uua-DP-Y9O" firstAttribute="top" secondItem="gPA-s6-u7t" secondAttribute="top" constant="8" id="5V9-qN-Tlg"/>
+                                                <constraint firstItem="JFP-LD-dHc" firstAttribute="centerX" secondItem="gPA-s6-u7t" secondAttribute="centerX" id="JHH-TA-Dyt"/>
+                                                <constraint firstItem="JFP-LD-dHc" firstAttribute="top" secondItem="uua-DP-Y9O" secondAttribute="bottom" constant="8" symbolic="YES" id="MSb-Q7-52O"/>
+                                                <constraint firstItem="uua-DP-Y9O" firstAttribute="centerX" secondItem="gPA-s6-u7t" secondAttribute="centerX" id="RVA-Ps-tRD"/>
+                                            </constraints>
                                         </collectionViewCellContentView>
+                                        <size key="customSize" width="155" height="149"/>
+                                        <connections>
+                                            <outlet property="POIImageView" destination="JFP-LD-dHc" id="DAB-jy-jXF"/>
+                                            <outlet property="POINameLabel" destination="uua-DP-Y9O" id="Eim-6r-cXD"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
@@ -132,6 +158,7 @@
                     <navigationItem key="navigationItem" id="LN1-9O-Wq3"/>
                     <connections>
                         <outlet property="collectionView" destination="A7g-rE-b1G" id="6Nm-AW-uwR"/>
+                        <outlet property="flowLayout" destination="3Eh-pl-OaH" id="P0e-WO-65f"/>
                         <outlet property="mapView" destination="1Wc-ov-D1f" id="XIX-8p-IRn"/>
                         <outlet property="navBar" destination="6r1-hH-khf" id="lk3-Pm-508"/>
                         <outlet property="newCollectionButton" destination="ssb-R3-dNS" id="L20-Zr-Le4"/>

@@ -12,6 +12,9 @@
 		3A0898A02789E347000A4DD8 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A08989F2789E347000A4DD8 /* DataController.swift */; };
 		3A292AB02783655100005396 /* ImageRequestResonse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A292AAF2783655100005396 /* ImageRequestResonse.swift */; };
 		3A292AB227836AAD00005396 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A292AB127836AAD00005396 /* Photo.swift */; };
+		3A5B45E927A52D0E009A0BC0 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 3A5B45E827A52D0E009A0BC0 /* Alamofire */; };
+		3A5B45EB27A59CBD009A0BC0 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5B45EA27A59CBD009A0BC0 /* UIViewController+Extensions.swift */; };
+		3A5B45EE27A59EBB009A0BC0 /* AlamofireImage in Frameworks */ = {isa = PBXBuildFile; productRef = 3A5B45ED27A59EBB009A0BC0 /* AlamofireImage */; };
 		3AC8A777277C88C9001AB535 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC8A776277C88C9001AB535 /* AppDelegate.swift */; };
 		3AC8A779277C88C9001AB535 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC8A778277C88C9001AB535 /* SceneDelegate.swift */; };
 		3AC8A77E277C88C9001AB535 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3AC8A77C277C88C9001AB535 /* Main.storyboard */; };
@@ -25,6 +28,7 @@
 		3AC8A7B2277C8D11001AB535 /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3AC8A7B1277C8D11001AB535 /* Secrets.plist */; };
 		3AC8A7B4277C8D4B001AB535 /* FetchSecrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC8A7B3277C8D4B001AB535 /* FetchSecrets.swift */; };
 		3AC8A7B7277DE8B4001AB535 /* OAuthSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3AC8A7B6277DE8B4001AB535 /* OAuthSwift */; };
+		3AE1E49327B01BE500D8951B /* PhotoAlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE1E49227B01BE500D8951B /* PhotoAlbumCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +54,7 @@
 		3A08989F2789E347000A4DD8 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		3A292AAF2783655100005396 /* ImageRequestResonse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRequestResonse.swift; sourceTree = "<group>"; };
 		3A292AB127836AAD00005396 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
+		3A5B45EA27A59CBD009A0BC0 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		3AC8A773277C88C9001AB535 /* Virtual Tourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Virtual Tourist.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AC8A776277C88C9001AB535 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3AC8A778277C88C9001AB535 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -66,6 +71,7 @@
 		3AC8A7AF277C897A001AB535 /* API Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "API Client.swift"; sourceTree = "<group>"; };
 		3AC8A7B1277C8D11001AB535 /* Secrets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Secrets.plist; sourceTree = "<group>"; };
 		3AC8A7B3277C8D4B001AB535 /* FetchSecrets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchSecrets.swift; sourceTree = "<group>"; };
+		3AE1E49227B01BE500D8951B /* PhotoAlbumCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +80,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				3AC8A7B7277DE8B4001AB535 /* OAuthSwift in Frameworks */,
+				3A5B45E927A52D0E009A0BC0 /* Alamofire in Frameworks */,
+				3A5B45EE27A59EBB009A0BC0 /* AlamofireImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -179,6 +187,8 @@
 			children = (
 				3A08989B2785468B000A4DD8 /* TravelLocationsMapViewController.swift */,
 				3A08989D2785475D000A4DD8 /* PhotoAlbumViewController.swift */,
+				3A5B45EA27A59CBD009A0BC0 /* UIViewController+Extensions.swift */,
+				3AE1E49227B01BE500D8951B /* PhotoAlbumCollectionViewCell.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -227,6 +237,8 @@
 			name = "Virtual Tourist";
 			packageProductDependencies = (
 				3AC8A7B6277DE8B4001AB535 /* OAuthSwift */,
+				3A5B45E827A52D0E009A0BC0 /* Alamofire */,
+				3A5B45ED27A59EBB009A0BC0 /* AlamofireImage */,
 			);
 			productName = "Virtual Tourist";
 			productReference = 3AC8A773277C88C9001AB535 /* Virtual Tourist.app */;
@@ -302,6 +314,8 @@
 			mainGroup = 3AC8A76A277C88C9001AB535;
 			packageReferences = (
 				3AC8A7B5277DE8B3001AB535 /* XCRemoteSwiftPackageReference "OAuthSwift" */,
+				3A5B45E727A52D0E009A0BC0 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				3A5B45EC27A59EBA009A0BC0 /* XCRemoteSwiftPackageReference "AlamofireImage" */,
 			);
 			productRefGroup = 3AC8A774277C88C9001AB535 /* Products */;
 			projectDirPath = "";
@@ -349,10 +363,12 @@
 			files = (
 				3A08989C2785468B000A4DD8 /* TravelLocationsMapViewController.swift in Sources */,
 				3A292AB227836AAD00005396 /* Photo.swift in Sources */,
+				3AE1E49327B01BE500D8951B /* PhotoAlbumCollectionViewCell.swift in Sources */,
 				3A08989E2785475D000A4DD8 /* PhotoAlbumViewController.swift in Sources */,
 				3AC8A7B4277C8D4B001AB535 /* FetchSecrets.swift in Sources */,
 				3AC8A781277C88C9001AB535 /* Virtual_Tourist.xcdatamodeld in Sources */,
 				3A0898A02789E347000A4DD8 /* DataController.swift in Sources */,
+				3A5B45EB27A59CBD009A0BC0 /* UIViewController+Extensions.swift in Sources */,
 				3AC8A777277C88C9001AB535 /* AppDelegate.swift in Sources */,
 				3A292AB02783655100005396 /* ImageRequestResonse.swift in Sources */,
 				3AC8A779277C88C9001AB535 /* SceneDelegate.swift in Sources */,
@@ -704,6 +720,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		3A5B45E727A52D0E009A0BC0 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		3A5B45EC27A59EBA009A0BC0 /* XCRemoteSwiftPackageReference "AlamofireImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/AlamofireImage.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
 		3AC8A7B5277DE8B3001AB535 /* XCRemoteSwiftPackageReference "OAuthSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/OAuthSwift/OAuthSwift.git";
@@ -715,6 +747,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		3A5B45E827A52D0E009A0BC0 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3A5B45E727A52D0E009A0BC0 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		3A5B45ED27A59EBB009A0BC0 /* AlamofireImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3A5B45EC27A59EBA009A0BC0 /* XCRemoteSwiftPackageReference "AlamofireImage" */;
+			productName = AlamofireImage;
+		};
 		3AC8A7B6277DE8B4001AB535 /* OAuthSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3AC8A7B5277DE8B3001AB535 /* XCRemoteSwiftPackageReference "OAuthSwift" */;

@@ -7,6 +7,7 @@
 
 import Foundation
 import OAuthSwift
+import Alamofire
 
 class APIClient {
     static var oauth: OAuth1Swift? = nil
@@ -29,14 +30,17 @@ class APIClient {
     }
     
     enum Endpoints {
-        case imageSearch(lat: String, long: String)
+        case imageSearchSigned(lat: Double, long: Double)
+        case imageSearchUnSigned(lat: Double, long: Double)
         
         static let base: String = "https://www.flickr.com/services/rest"
         
         var stringValue: String {
             switch self {
-            case .imageSearch(let lat, let long):
-                return Endpoints.base + "?api_key=\(Constants.OAUTH_TOKEN!)&method=\(Constants.FLICKR_SEARCH_METHOD)&per_page=\(Constants.NUM_OF_PHOTOS)&format=json&nojsoncallback=?&lat=\(lat)&lon=\(long)&page=1"
+            case .imageSearchSigned(let lat, let long):
+                return Endpoints.base + "?api_key=\(Constants.OAUTH_TOKEN)&method=\(Constants.FLICKR_SEARCH_METHOD)&per_page=\(Constants.NUM_OF_PHOTOS)&format=json&nojsoncallback=?&lat=\(lat)&lon=\(long)&page=1"
+            case .imageSearchUnSigned(let lat, let long):
+                return Endpoints.base + "?api_key=\(Constants.CONSUMER_KEY!)&method=\(Constants.FLICKR_SEARCH_METHOD)&per_page=\(Constants.NUM_OF_PHOTOS)&format=json&nojsoncallback=?&lat=\(lat)&lon=\(long)&page=1"
             }
         }
         
@@ -45,30 +49,58 @@ class APIClient {
         }
     }
     
-    class func requestImagesForLocation(latitude lat: String, longitude long: String) -> OAuthSwiftRequestHandle? {
-        //TODO: construct flickr.images.search.url and search
-        // St. Augustine: (lat: "29.901243", long: "81.312431")
+   
+    class func requestImagesForLocationUnsigned(latitude lat: Double, longitude long: Double, completion: @escaping([URL]?, Error?) -> Void) -> Void {
+        let url = Endpoints.imageSearchUnSigned(lat: lat, long: long).url
+        let task = URLSession.shared.dataTask(with: url) { data, response, err in
+            guard let data = data else {
+                DispatchQueue.main.async {
+                    completion(nil, err)
+                }
+                return
+            }
+            let decoder = JSONDecoder()
+            var pictureURLs = [URL]()
+            do {
+                let responseObject = try decoder.decode(ImageRequestResponse.self, from: data)
+                for photoURL in responseObject.photos.photo {
+                    if let url = photoURL.download_url {
+                        pictureURLs.append(url)
+                    }
+                }
+                DispatchQueue.main.async {
+                    completion(pictureURLs, nil)
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    completion(nil, error)
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    class func requestImagesForLocation(latitude lat: Double, longitude long: Double, completion: @escaping([URL]?, Error?) -> Void) -> OAuthSwiftRequestHandle? {
         if let oauth = APIClient.oauth {
-            oauth.client.get(Endpoints.imageSearch(lat: lat, long: long).url, completionHandler: { result in
+            oauth.client.get(Endpoints.imageSearchSigned(lat: lat, long: long).url, completionHandler: { result in
                 switch result {
                 case .success(let response):
                     let response_data = response.data
-                    print(String(data: response_data, encoding: .utf8))
                     let decoder = JSONDecoder()
+                    var pictureURLs = [URL]()
                     do {
                         let responseObject = try decoder.decode(ImageRequestResponse.self, from: response_data)
-                        for photo in responseObject.photos.photo{ print(photo.download_url) }
-//                        DispatchQueue.main.async {
-//                            completion(responseObject, nil)
-//                        }
+                        for photoURL in responseObject.photos.photo {
+                            if let url = photoURL.download_url {
+                                pictureURLs.append(url)
+                            }
+                        }
+                        completion(pictureURLs, nil)
                     } catch {
-                        print(error)
-//                        DispatchQueue.main.async {
-//                            completion(nil, error)
-//                        }
+                        completion(nil, error)
                     }
                 case .failure(let error):
-                    print(error)
+                    completion(nil, error)
                 }
             })
         }
@@ -94,8 +126,6 @@ class APIClient {
                     //TODO: inform user
                     print(error.localizedDescription)
                 }
-                // TODO: Testing
-                requestImagesForLocation(latitude: "29.901243", longitude: "81.312431")
             }
         } else {
             // TODO: notify user

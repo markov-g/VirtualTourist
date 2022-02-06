@@ -10,8 +10,6 @@ import MapKit
 import CoreLocation
 import CoreData
 
-// TODO: Save current map location & Resolution
-
 class TravelLocationsMapViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
 
@@ -44,6 +42,30 @@ class TravelLocationsMapViewController: UIViewController {
         }
     }
     
+    fileprivate func configureMap() {
+        var span: MKCoordinateSpan?
+        var coordinate: CLLocationCoordinate2D?
+        let centerLatitude = UserDefaults.standard.float(forKey: "LastRegionCenterLat")
+        let centerLongitude = UserDefaults.standard.float(forKey: "LastRegionCenterLong")
+        let latitudeSpan = UserDefaults.standard.float(forKey: "LastRegionSpanLat")
+        let longitudeSpan = UserDefaults.standard.float(forKey: "LastRegionSpanLong")
+        
+        if latitudeSpan != 0 || longitudeSpan != 0 {
+            span = MKCoordinateSpan(latitudeDelta: CLLocationDegrees(latitudeSpan), longitudeDelta: CLLocationDegrees(longitudeSpan))
+        }
+        
+        if centerLatitude != 0 || centerLongitude != 0 {
+            coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(centerLatitude), longitude: CLLocationDegrees(centerLongitude))
+        }
+        
+        if let c = coordinate, let s = span {
+            let region = MKCoordinateRegion(center: c, span: s)
+            
+            self.mapView.setRegion(region, animated: false)
+            self.mapView.isPitchEnabled = false
+        }
+      }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         locationManager.delegate = self
@@ -56,6 +78,8 @@ class TravelLocationsMapViewController: UIViewController {
         setUpFetchResultsController()
 
         _ = loadSavedLocations()
+        
+        configureMap()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -86,14 +110,14 @@ class TravelLocationsMapViewController: UIViewController {
             let toRemove = pins.filter { location in
                 contains.evaluate(with: location)
             }
-            debugPrint("Removing location @ \(toRemove.first)")
+            debugPrint("Removing location @ (\(toRemove.first?.lat), \(toRemove.first?.long))")
             dataController.viewContext.delete(toRemove.first!)
             try? dataController.viewContext.save()
             loadSavedLocations()
         }
     }
     
-    fileprivate func redrawPin(_ pin: VTLocationPin) {
+    func redrawPin(_ pin: VTLocationPin) {
         let pinAnnotation = MKPointAnnotation()
         pinAnnotation.coordinate = CLLocationCoordinate2DMake(pin.lat, pin.long)
         pinAnnotation.title = "POI@(lat:\(pin.lat),long:\(pin.long)"
@@ -129,7 +153,7 @@ extension TravelLocationsMapViewController: MKMapViewDelegate {
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
             pinView!.canShowCallout = true
-            pinView!.pinTintColor = .green
+            pinView!.pinTintColor = .magenta
             pinView!.rightCalloutAccessoryView = UIButton(type: .infoDark)
             pinView?.leftCalloutAccessoryView = UIButton(type: .close)
         }
@@ -144,22 +168,42 @@ extension TravelLocationsMapViewController: MKMapViewDelegate {
     // to the URL specified in the annotationViews subtitle property.
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if control == view.rightCalloutAccessoryView {
-            let app = UIApplication.shared
-            presentPhotoAlbumVC()            
+            let pinLat = view.annotation!.coordinate.latitude
+            let pinLong = view.annotation!.coordinate.longitude
+            let contains = NSPredicate(format: "lat == %lf AND long == %lf", pinLat, pinLong)
+            
+            if let pins = self.loadSavedLocations(redraw: false) {
+                let currentPin = pins.filter { location in
+                    contains.evaluate(with: location)
+                }
+                presentPhotoAlbumVC(pin: currentPin.first)
+            }
         }
         
         if control == view.leftCalloutAccessoryView {
-            debugPrint("delete annotation")
             self.removePin(forAnnotation: view.annotation as! MKAnnotation)
             mapView.removeAnnotation(view.annotation as! MKAnnotation)
         }
     }
     
-    fileprivate func presentPhotoAlbumVC() {
+    fileprivate func presentPhotoAlbumVC(pin: VTLocationPin?) {
         let photoAlbumVC = storyboard?.instantiateViewController(withIdentifier: "PhotoAlbumVC") as! PhotoAlbumViewController
         photoAlbumVC.currentLocationPin = pin
+        photoAlbumVC.dataController = dataController
         present(photoAlbumVC, animated: true, completion: nil)
     }
+    
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        let centerLatitude = mapView.region.center.latitude
+        let centerLongitude = mapView.region.center.longitude
+        let latitudeSpan = mapView.region.span.latitudeDelta
+        let longitudeSpan = mapView.region.span.longitudeDelta
+        
+        UserDefaults.standard.set(centerLatitude, forKey: "LastRegionCenterLat")
+        UserDefaults.standard.set(centerLongitude, forKey: "LastRegionCenterLong")
+        UserDefaults.standard.set(latitudeSpan, forKey: "LastRegionSpanLat")
+        UserDefaults.standard.set(longitudeSpan, forKey: "LastRegionSpanLong")
+      }
 }
 
 // MARK: - CLLocationManagerDelegate Methods
@@ -182,6 +226,7 @@ extension TravelLocationsMapViewController: NSFetchedResultsControllerDelegate {
             debugPrint("New pin inserted: \(newPin.lat), \(newPin.long)")
             redrawPin(newPin)
         case .delete:
+            // already removed and saved by removePin
             break
         default:
             break
