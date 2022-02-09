@@ -13,7 +13,11 @@ import AlamofireImage
 
 class PhotoAlbumViewController: UIViewController {
     var dataController: DataController!
-    var pictures: [VTPictures] = [VTPictures]()
+    var pictures: [VTPictures] = [VTPictures]() {
+        didSet {
+            self.collectionView.reloadData()
+        }
+    }
     var currentLocationPin: VTLocationPin!
     @IBOutlet weak var navBar: UINavigationBar!
     @IBOutlet weak var mapView: MKMapView!
@@ -66,6 +70,7 @@ class PhotoAlbumViewController: UIViewController {
             debugPrint("Recevied \(imageURLs.count) image URLs for location: \(currentLocationPin.lat), \(currentLocationPin.long)")
             imageURLs.forEach { (imageURL) in
                 AF.request(imageURL).responseImage { response in
+                    sleep(7)
                     if case .success(let image) = response.result {
                         let pic = VTPictures(context: self.dataController.viewContext)
                         pic.image = image.jpegData(compressionQuality: 1)
@@ -108,7 +113,7 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "me.gmarkov.CollectionCell", for: indexPath) as! PhotoAlbumCollectionViewCell
-        cell.POIImageView.image = UIImage(data: (pictures.first!.image)!)
+        cell.POIImageView.image = UIImage(data: (pictures[indexPath.row].image)!)
         return cell
     }
 }

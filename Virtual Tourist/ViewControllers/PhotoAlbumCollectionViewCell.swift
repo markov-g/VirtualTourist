@@ -12,5 +12,4 @@ class PhotoAlbumCollectionViewCell: UICollectionViewCell {
     // MARK: Outlets
     
     @IBOutlet weak var POIImageView: UIImageView!
-    @IBOutlet weak var POINameLabel: UILabel!
 }
