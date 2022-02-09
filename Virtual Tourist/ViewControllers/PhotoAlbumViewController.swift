@@ -40,11 +40,13 @@ class PhotoAlbumViewController: UIViewController {
         
         redrawPin(currentLocationPin)
                         
-        let space: CGFloat = 3.0
-        let dimension = (view.frame.size.width - (2*space)) / 3.0
+        let space: CGFloat = 2.0
+        let dimension = (view.frame.size.width - (1*space)) / 2.0
         flowLayout.minimumInteritemSpacing = space
         flowLayout.minimumLineSpacing = space
+        flowLayout.itemSize
         flowLayout.itemSize = CGSize(width: dimension, height: dimension)
+        collectionView.collectionViewLayout = flowLayout
         
         if currentLocationPin.pictures?.count == 0 {
             fetchPhotos()
@@ -70,7 +72,6 @@ class PhotoAlbumViewController: UIViewController {
             debugPrint("Recevied \(imageURLs.count) image URLs for location: \(currentLocationPin.lat), \(currentLocationPin.long)")
             imageURLs.forEach { (imageURL) in
                 AF.request(imageURL).responseImage { response in
-                    sleep(7)
                     if case .success(let image) = response.result {
                         let pic = VTPictures(context: self.dataController.viewContext)
                         pic.image = image.jpegData(compressionQuality: 1)

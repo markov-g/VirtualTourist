@@ -96,12 +96,18 @@
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="JFP-LD-dHc">
                                                     <rect key="frame" x="5" y="5" width="145" height="139"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="128" id="cve-Yy-kEB"/>
+                                                        <constraint firstAttribute="width" constant="128" id="mhN-fm-nUN"/>
+                                                    </constraints>
                                                 </imageView>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="JFP-LD-dHc" firstAttribute="leading" secondItem="gPA-s6-u7t" secondAttribute="leading" constant="5" id="FBv-Z4-ltM"/>
                                                 <constraint firstAttribute="bottom" secondItem="JFP-LD-dHc" secondAttribute="bottom" constant="5" id="QEz-MU-Ze3"/>
                                                 <constraint firstAttribute="trailing" secondItem="JFP-LD-dHc" secondAttribute="trailing" constant="5" id="Vf5-lq-Fz8"/>
+                                                <constraint firstItem="JFP-LD-dHc" firstAttribute="top" secondItem="gPA-s6-u7t" secondAttribute="top" constant="5" id="rMj-gl-LEP"/>
+                                                <constraint firstItem="JFP-LD-dHc" firstAttribute="leading" secondItem="gPA-s6-u7t" secondAttribute="leading" constant="5" id="vHt-eU-Dcb"/>
                                                 <constraint firstItem="JFP-LD-dHc" firstAttribute="top" secondItem="gPA-s6-u7t" secondAttribute="top" constant="5" id="y0c-wv-nl8"/>
                                             </constraints>
                                         </collectionViewCellContentView>
