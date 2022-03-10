@@ -24,23 +24,23 @@ class APIClient {
         
         static let IMAGE_BASE = "https://live.staticflickr.com"
         static let ACCURACY = 11 // city
-        static let NUM_OF_PHOTOS = 30
+        static let NUM_OF_PHOTOS = 9
         static var OAUTH_TOKEN: String? = nil
         static var OAUTH_TOKEN_SECRET: String? = nil
     }
     
     enum Endpoints {
-        case imageSearchSigned(lat: Double, long: Double)
-        case imageSearchUnSigned(lat: Double, long: Double)
+        case imageSearchSigned(lat: Double, long: Double, nr_photos: Int, page: Int)
+        case imageSearchUnSigned(lat: Double, long: Double, nr_photos: Int, page: Int)
         
         static let base: String = "https://www.flickr.com/services/rest"
         
         var stringValue: String {
             switch self {
-            case .imageSearchSigned(let lat, let long):
-                return Endpoints.base + "?api_key=\(Constants.OAUTH_TOKEN)&method=\(Constants.FLICKR_SEARCH_METHOD)&per_page=\(Constants.NUM_OF_PHOTOS)&format=json&nojsoncallback=?&lat=\(lat)&lon=\(long)&page=1"
-            case .imageSearchUnSigned(let lat, let long):
-                return Endpoints.base + "?api_key=\(Constants.CONSUMER_KEY!)&method=\(Constants.FLICKR_SEARCH_METHOD)&per_page=\(Constants.NUM_OF_PHOTOS)&format=json&nojsoncallback=?&lat=\(lat)&lon=\(long)&page=1"
+            case .imageSearchSigned(let lat, let long, let nr_photos, let page):
+                return Endpoints.base + "?api_key=\(Constants.OAUTH_TOKEN)&method=\(Constants.FLICKR_SEARCH_METHOD)&per_page=\(nr_photos)&format=json&nojsoncallback=?&lat=\(lat)&lon=\(long)&page=\(page)"
+            case .imageSearchUnSigned(let lat, let long, let nr_photos, let page):
+                return Endpoints.base + "?api_key=\(Constants.CONSUMER_KEY!)&method=\(Constants.FLICKR_SEARCH_METHOD)&per_page=\(nr_photos)&format=json&nojsoncallback=?&lat=\(lat)&lon=\(long)&page=\(page)"
             }
         }
         
@@ -50,8 +50,8 @@ class APIClient {
     }
     
    
-    class func requestImagesForLocationUnsigned(latitude lat: Double, longitude long: Double, completion: @escaping([URL]?, Error?) -> Void) -> Void {
-        let url = Endpoints.imageSearchUnSigned(lat: lat, long: long).url
+    class func requestImagesForLocationUnsigned(latitude lat: Double, longitude long: Double, nr_photos nr_photos: Int = Constants.NUM_OF_PHOTOS, page page: Int = 1, completion: @escaping([URL]?, Error?) -> Void) -> Void {
+        let url = Endpoints.imageSearchUnSigned(lat: lat, long: long, nr_photos: nr_photos, page: page).url
         let task = URLSession.shared.dataTask(with: url) { data, response, err in
             guard let data = data else {
                 DispatchQueue.main.async {
@@ -80,9 +80,9 @@ class APIClient {
         task.resume()
     }
     
-    class func requestImagesForLocation(latitude lat: Double, longitude long: Double, completion: @escaping([URL]?, Error?) -> Void) -> OAuthSwiftRequestHandle? {
+    class func requestImagesForLocation(latitude lat: Double, longitude long: Double, nr_photos nr_photos: Int = Constants.NUM_OF_PHOTOS, page page: Int = 1, completion: @escaping([URL]?, Error?) -> Void) -> OAuthSwiftRequestHandle? {
         if let oauth = APIClient.oauth {
-            oauth.client.get(Endpoints.imageSearchSigned(lat: lat, long: long).url, completionHandler: { result in
+            oauth.client.get(Endpoints.imageSearchSigned(lat: lat, long: long, nr_photos: nr_photos, page: page).url, completionHandler: { result in
                 switch result {
                 case .success(let response):
                     let response_data = response.data
