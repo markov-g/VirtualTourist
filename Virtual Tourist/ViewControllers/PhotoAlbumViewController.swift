@@ -40,7 +40,7 @@ class PhotoAlbumViewController: UIViewController {
     }
     
     @IBAction func backButtonTapped(_ sender: UIBarButtonItem) {
-        // TODO: 
+        self.dismiss(animated: true, completion: nil)
     }
     
    
