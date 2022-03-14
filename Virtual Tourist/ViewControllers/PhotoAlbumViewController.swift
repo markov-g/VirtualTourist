@@ -5,6 +5,8 @@
 //  Created by Georgi Markov on 1/4/22.
 //
 
+
+// TODO: Networking features
 import UIKit
 import MapKit
 import CoreData
@@ -183,12 +185,17 @@ class PhotoAlbumViewController: UIViewController {
 
 extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return pictures.count
+        return APIClient.Constants.NUM_OF_PHOTOS //pictures.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "me.gmarkov.CollectionCell", for: indexPath) as! PhotoAlbumCollectionViewCell
-        cell.POIImageView.image = UIImage(data: (pictures[indexPath.row].image)!)
+        if pictures.indices.contains(indexPath.row) {
+            cell.POIImageView.image = UIImage(data: (pictures[indexPath.row].image)!)
+        }
+        else {
+            cell.POIImageView.image = UIImage(named: "placeholder")
+        }
         return cell
     }
     
