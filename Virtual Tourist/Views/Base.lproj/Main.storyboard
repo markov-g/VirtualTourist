@@ -131,6 +131,9 @@
                                     <action selector="newCollectionButtonTapped:" destination="Mg6-tb-FFI" eventType="touchUpInside" id="6TY-Xm-ONF"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="6MQ-Xe-495">
+                                <rect key="frame" x="197" y="812.5" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="zkP-hj-3B3"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -145,13 +148,16 @@
                             <constraint firstItem="ssb-R3-dNS" firstAttribute="firstBaseline" secondItem="A7g-rE-b1G" secondAttribute="baseline" constant="40" symbolType="layoutAnchor" id="WrM-wE-7OD"/>
                             <constraint firstItem="1Wc-ov-D1f" firstAttribute="trailing" secondItem="zkP-hj-3B3" secondAttribute="trailing" id="daF-gv-QCf"/>
                             <constraint firstItem="ssb-R3-dNS" firstAttribute="leading" secondItem="zkP-hj-3B3" secondAttribute="leading" id="hsV-ZR-W5a"/>
+                            <constraint firstItem="6MQ-Xe-495" firstAttribute="centerX" secondItem="GOc-9S-xjX" secondAttribute="centerX" id="kqv-qh-YNc"/>
                             <constraint firstAttribute="bottom" secondItem="ssb-R3-dNS" secondAttribute="bottom" constant="6" id="qEG-lC-DeP"/>
                             <constraint firstItem="A7g-rE-b1G" firstAttribute="leading" secondItem="zkP-hj-3B3" secondAttribute="leading" id="qY1-Wo-0cc"/>
+                            <constraint firstItem="ssb-R3-dNS" firstAttribute="firstBaseline" secondItem="6MQ-Xe-495" secondAttribute="baseline" constant="40" symbolType="layoutAnchor" id="uyG-h1-pXP"/>
                             <constraint firstItem="A7g-rE-b1G" firstAttribute="trailing" secondItem="zkP-hj-3B3" secondAttribute="trailing" id="wjT-IH-8Ld"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="LN1-9O-Wq3"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="6MQ-Xe-495" id="kng-Me-DEp"/>
                         <outlet property="collectionView" destination="A7g-rE-b1G" id="6Nm-AW-uwR"/>
                         <outlet property="flowLayout" destination="3Eh-pl-OaH" id="P0e-WO-65f"/>
                         <outlet property="mapView" destination="1Wc-ov-D1f" id="XIX-8p-IRn"/>

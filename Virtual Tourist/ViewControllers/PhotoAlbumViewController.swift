@@ -6,7 +6,7 @@
 //
 
 
-// TODO: Networking features
+// TODO: New Album button enable/disable
 import UIKit
 import MapKit
 import CoreData
@@ -14,6 +14,7 @@ import Alamofire
 import AlamofireImage
 
 class PhotoAlbumViewController: UIViewController {
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     var dataController: DataController!
     var fetchResultsController: NSFetchedResultsController<VTPictures>!
     var picture_page: Int = 1
@@ -21,6 +22,10 @@ class PhotoAlbumViewController: UIViewController {
         didSet {
             self.saveState()
             self.collectionView.reloadData()
+            
+            if pictures.count == APIClient.Constants.NUM_OF_PHOTOS {
+                startBackgroundActivity(false)
+            }
         }
     }
     var currentLocationPin: VTLocationPin!
@@ -46,6 +51,14 @@ class PhotoAlbumViewController: UIViewController {
     }
     
    
+    fileprivate func startBackgroundActivity(_ isExecutingBackgroundActivity: Bool) {
+        if isExecutingBackgroundActivity {
+            activityIndicator.startAnimating()
+        } else {
+            activityIndicator.stopAnimating()
+        }
+    }
+    
     fileprivate func setUpFetchResultsController() {
         let fetchRequst: NSFetchRequest<VTPictures> = VTPictures.fetchRequest()
         // sort by longitude, since NSFetchResultsController requires consistent ordering
@@ -77,6 +90,9 @@ class PhotoAlbumViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        activityIndicator.color = UIColor.systemCyan
+        activityIndicator.style = UIActivityIndicatorView.Style.large
         
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -113,6 +129,7 @@ class PhotoAlbumViewController: UIViewController {
     }
     
     fileprivate func fetchPhotos() {
+        startBackgroundActivity(true)
         // APIClient.oauthorize()
         // APIClient.requestImagesForLocation(latitude: currentLocationPin.lat, longitude: currentLocationPin.long, completion: handleImageResponse(imageURLs:error:))
             
