@@ -4,6 +4,6 @@
  location from Flickr and persist both the pictures, and the association of 
  the pictures with the pin.
 
-![Alt text](img/img1.png "A Preview.")
+![Alt text](imgs/img1.png "A Preview.")
 
-![Alt text](img/img2.png "A Preview.")
+![Alt text](imgs/img2.png "A Preview.")
