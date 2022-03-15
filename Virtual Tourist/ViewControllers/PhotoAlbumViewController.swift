@@ -6,7 +6,6 @@
 //
 
 
-// TODO: New Album button enable/disable
 import UIKit
 import MapKit
 import CoreData
@@ -25,6 +24,7 @@ class PhotoAlbumViewController: UIViewController {
             
             if pictures.count == APIClient.Constants.NUM_OF_PHOTOS {
                 startBackgroundActivity(false)
+                self.newCollectionButton.isEnabled = true
             }
         }
     }
@@ -100,7 +100,7 @@ class PhotoAlbumViewController: UIViewController {
         
         redrawPin(currentLocationPin)
         
-//        newCollectionButton.isEnabled = false
+        newCollectionButton.isEnabled = false
                         
         let space: CGFloat = 2.0
         let dimension = (view.frame.size.width - (1*space)) / 2.0
